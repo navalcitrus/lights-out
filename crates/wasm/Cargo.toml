@@ -1,0 +1,17 @@
+[package]
+name = "lights-out-wasm"
+publish = false
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+lights-out-core = { path = "../core" }
+wasm-bindgen = "=0.2.117"
+console_error_panic_hook = "0.1"

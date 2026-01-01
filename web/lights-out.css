@@ -1,0 +1,320 @@
+/* ===== Start of lights-out.css ===== */
+
+.lights-out {
+    --lo-cell-max: 3rem;
+    --lo-gap: 4px;
+    --lo-cell-off: var(--abyss-soft);
+
+    margin: 2rem 0;
+}
+
+.lights-out .lo-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+
+    background: var(--abyss-soft);
+    border: 1px solid var(--color-surface);
+    border-radius: 4px;
+    box-shadow: inset 0 2px 10px var(--shadow-color);
+}
+
+.lights-out .lo-controls label {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: var(--main-text-color);
+    font-size: 0.8rem;
+}
+
+.lights-out .lo-controls select,
+.lights-out .lo-controls input[type="number"] {
+    box-sizing: border-box;
+    height: 2rem;
+    padding: 0.3rem 0.6rem;
+    margin: 0;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--main-text-color);
+
+    background: var(--color-deep);
+    border: 1px solid var(--color-surface);
+    border-radius: 2px;
+}
+
+.lights-out .lo-controls select:focus,
+.lights-out .lo-controls input[type="number"]:focus {
+    outline: none;
+    border-color: var(--main-link-unvisited-color);
+}
+
+.lights-out .lo-controls input[type="number"] {
+    width: 5rem;
+}
+
+.lights-out .lo-controls input[type="number"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.lights-out .lo-controls button {
+    box-sizing: border-box;
+    height: 2rem;
+    padding: 0.3rem 0.9rem;
+    margin: 0;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    color: var(--main-title-color);
+    background-color: var(--color-mid);
+    border: 1px solid var(--color-surface);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lights-out .lo-controls button:hover {
+    background-color: var(--color-surface);
+    color: var(--main-link-hover-color);
+    box-shadow: 0 0 10px var(--shadow-color);
+}
+
+.lights-out .lo-status {
+    min-height: 1.5rem;
+    margin: 0.5rem 0;
+    color: var(--main-text-color);
+    font-size: 0.9rem;
+}
+
+.lights-out .lo-status.error {
+    color: var(--main-title-color);
+}
+
+.lights-out .lo-status.error::before {
+    content: "error: ";
+    color: var(--main-header-color);
+    font-weight: bold;
+}
+
+.lights-out .lo-status.solved {
+    color: var(--main-link-hover-color);
+    text-shadow: 0 0 8px var(--highlight-color);
+}
+
+.lights-out .lo-board-wrap {
+    container-type: inline-size;
+}
+
+.lights-out .lo-board {
+    --lo-cell-size: min(var(--lo-cell-max),
+            calc((100cqi - (var(--lo-cols) - 1) * var(--lo-gap)) / var(--lo-cols)));
+
+    display: grid;
+    grid-template-columns: repeat(var(--lo-cols), var(--lo-cell-size));
+    gap: var(--lo-gap);
+    margin: 1rem 0 2rem;
+    justify-content: center;
+}
+
+.lights-out .lo-cell {
+    position: relative;
+    width: var(--lo-cell-size);
+    height: var(--lo-cell-size);
+    padding: 0;
+    margin: 0;
+
+    font-family: inherit;
+    font-size: min(1rem, calc(var(--lo-cell-size) * 0.4));
+    font-weight: bold;
+    color: var(--color-abyss);
+
+    background: var(--lo-cell-off);
+    border: 1px solid var(--color-surface);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.lights-out .lo-cell:empty {
+    color: var(--main-text-color);
+}
+
+.lights-out .lo-cell:hover {
+    transform: scale(1.04);
+}
+
+.lights-out .lo-cell:active {
+    transform: scale(0.96);
+}
+
+.lights-out .lo-cell.hint {
+    outline: 2px dashed var(--main-link-unvisited-color);
+    outline-offset: -4px;
+}
+
+.lights-out .lo-cell.hint-next {
+    outline: 2px solid var(--main-link-unvisited-color);
+    outline-offset: -4px;
+    box-shadow: 0 0 0 3px var(--main-link-unvisited-color),
+        0 0 14px 2px var(--main-link-unvisited-color);
+    animation: lo-hint-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes lo-hint-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px var(--main-link-unvisited-color),
+            0 0 8px 1px var(--main-link-unvisited-color);
+    }
+
+    50% {
+        box-shadow: 0 0 0 3px var(--main-link-unvisited-color),
+            0 0 18px 4px var(--main-link-unvisited-color);
+    }
+}
+
+.lights-out .lo-cell[data-hint-count]::after {
+    content: "×" attr(data-hint-count);
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--main-link-hover-color);
+    text-shadow: 0 0 3px var(--color-abyss), 0 0 2px var(--color-abyss);
+    pointer-events: none;
+}
+
+.lights-out .lo-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--abyss-soft);
+    border: 1px solid var(--color-surface);
+    border-radius: 4px;
+    padding: 1rem;
+    box-shadow: inset 0 2px 10px var(--shadow-color);
+}
+
+.lights-out .lo-preview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.lights-out .lo-preview-head select {
+    height: 1.8rem;
+    padding: 0.2rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: var(--main-text-color);
+    background: var(--color-deep);
+    border: 1px solid var(--color-surface);
+    border-radius: 2px;
+}
+
+.lights-out .lo-preview h3 {
+    margin: 0;
+}
+
+.lights-out .lo-preview svg {
+    width: 100%;
+    height: 320px;
+    background: var(--color-abyss);
+    border: 1px solid var(--color-surface);
+    border-radius: 2px;
+}
+
+.lights-out .lo-preview .edge {
+    stroke: var(--nav-link-color);
+    stroke-width: 0.04;
+    fill: none;
+}
+
+.lights-out .lo-preview .wrap {
+    stroke: var(--main-link-unvisited-color);
+    stroke-width: 0.04;
+    fill: none;
+    opacity: 0.6;
+}
+
+.lights-out .lo-preview .glue {
+    stroke: var(--main-link-visited-color);
+    stroke-width: 0.04;
+    stroke-dasharray: 0.12 0.12;
+    fill: none;
+    opacity: 0.55;
+}
+
+.lights-out .lo-preview .node {
+    fill: var(--main-link-hover-color);
+    stroke: var(--color-abyss);
+    stroke-width: 0.025;
+}
+
+.lights-out .lo-preview .ghost {
+    fill: var(--main-link-hover-color);
+    stroke: var(--color-abyss);
+    stroke-width: 0.02;
+    opacity: 0.35;
+}
+
+.lights-out .lo-preview .border {
+    stroke: var(--color-mid);
+    stroke-width: 0.04;
+    stroke-dasharray: 0.1 0.1;
+}
+
+.lights-out .lo-preview .seam {
+    stroke: var(--main-header-color);
+    stroke-width: 0.06;
+}
+
+.lights-out .lo-preview .chevron {
+    stroke: var(--main-title-color);
+    stroke-width: 0.07;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.lights-out .lo-preview .ring-link {
+    stroke: var(--main-link-unvisited-color);
+    stroke-width: 0.04;
+    stroke-dasharray: 0.08 0.08;
+    opacity: 0.7;
+}
+
+.lights-out .lo-preview .ghost-cell {
+    fill: var(--color-deep);
+    stroke: var(--main-link-visited-color);
+    stroke-width: 0.03;
+    stroke-dasharray: 0.06 0.06;
+}
+
+.lights-out .lo-preview text {
+    letter-spacing: 0;
+    font-family: inherit;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
+.lights-out .lo-preview .node-label {
+    fill: var(--color-abyss);
+}
+
+.lights-out .lo-preview .ghost-cell-label {
+    fill: var(--main-link-visited-color);
+}
+
+/* ===== End of lights-out.css ===== */
